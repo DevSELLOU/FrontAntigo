@@ -1,0 +1,6 @@
+export { UserGoalsHeader } from './user-goals-header'
+export { UserGoalsTable } from './user-goals-table'
+export { CreateUserGoalButton } from './create-user-goal-button'
+export { CreateUserGoalModal } from './create-user-goal-modal'
+export { UpdateUserGoalModal } from './update-user-goal-modal'
+export { RemoveUserGoalModal } from './remove-user-goal-modal'
