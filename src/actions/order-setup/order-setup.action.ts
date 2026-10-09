@@ -3,28 +3,28 @@
 import type { ApiErrorResponse } from '@/interfaces/api-error-response.interface'
 import type { CommonResponse } from '@/interfaces/common-response.interface'
 import type { OrderSetup } from '@/interfaces/order-setup.interface'
-import { PaginatedResponse } from '@/interfaces/paginated-response.interface'
 import { handleServerAction } from '@/utils/server-action.util'
 
 export async function getOrderSetupAction(
   companyId: number,
   shopAccessToken?: string
 ): Promise<CommonResponse<OrderSetup> | ApiErrorResponse> {
-  const response = await handleServerAction<PaginatedResponse<OrderSetup>>({
+  const response = await handleServerAction<OrderSetup[]>({
     url: `/company/${companyId}/order-setup`,
     method: 'GET',
     shopAccessToken
   })
 
-  if ('data' in response && response.data?.data?.length > 0) {
+  if (!('data' in response)) return response
+
+  if (response.data.length > 0) {
     return {
       message: response.message,
-      data: response.data.data[0]
+      data: response.data[0]
     }
   }
 
-  // Return error if no data found or if it was already an error
-  return response as ApiErrorResponse
+  return { message: 'Configuração de pedido não encontrada.', statusCode: 404 }
 }
 
 export async function createOrderSetupAction(

@@ -4,12 +4,12 @@ import { ManagementListTab } from '@/components/management/management-list-tab'
 import { CreateUserCompanyModal } from '@/components/users-company/create-user-company-modal'
 import { UsersCompanyTable } from '@/components/users-company/users-company-table'
 import type { PaginatedResponseMetadata } from '@/interfaces/paginated-response-metadata'
-import type { User } from '@/interfaces/user.interface'
+import type { CompanyUserRow } from '@/utils/company-users.util'
 import type { FilterField } from '@/utils/advanced-filter/filter-fields'
 import { Users } from 'lucide-react'
 
 interface CompanyUsersTabProps {
-  users: User[]
+  users: CompanyUserRow[]
   metadata: PaginatedResponseMetadata
   filterFields: FilterField[]
   companyId: number

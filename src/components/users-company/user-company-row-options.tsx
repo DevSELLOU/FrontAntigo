@@ -2,7 +2,7 @@
 
 import { RowActionButton } from '@/components/shared/row-action-button'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import type { User } from '@/interfaces/user.interface'
+import type { CompanyUserRow } from '@/utils/company-users.util'
 import { Edit, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { RemoveUserCompanyModal } from './remove-user-company-modal'
@@ -10,7 +10,7 @@ import { UpdateUserCompanyModal } from './update-user-company-modal'
 
 interface UserCompanyRowOptionsProps {
   companyId: number
-  user: User
+  user: CompanyUserRow
 }
 
 export function UserCompanyRowOptions({ companyId, user }: UserCompanyRowOptionsProps) {

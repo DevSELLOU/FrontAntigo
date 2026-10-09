@@ -28,6 +28,7 @@ import { apiToFilterFields } from '@/utils/advanced-filter/filter-fields'
 import { getPageParams } from '@/utils/get-page-params.util'
 import { isApiErrorResponse } from '@/utils/is-api-error-response.util'
 import { serverFetch } from '@/utils/server-fetch.util'
+import { normalizeCompanyUserRows, type CompanyUserListEntry } from '@/utils/company-users.util'
 import { isAdministratorRole } from '@/utils/users/is-administrator-role.util'
 import { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
@@ -205,7 +206,7 @@ export default async function CompanyManagementPage({ searchParams, params }: Pa
 
     case 'usuarios': {
       const pageParams = getPageParams({ searchParams, includeDateFilters: false })
-      const response = await serverFetch<PaginatedResponse<User>>(
+      const response = await serverFetch<PaginatedResponse<User | CompanyUserListEntry>>(
         `/company/${companyId}/users?${pageParams.toString()}`,
         { method: 'GET' }
       )
@@ -214,7 +215,8 @@ export default async function CompanyManagementPage({ searchParams, params }: Pa
         throw new Error(response.message)
       }
 
-      const { data: users, metadata } = response
+      const { metadata } = response
+      const users = normalizeCompanyUserRows(response.data)
 
       const filterFields = apiToFilterFields({
         data: users?.[0],

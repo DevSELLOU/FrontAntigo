@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeCompanyUsers } from './company-users.util'
+import { normalizeCompanyUserRows, normalizeCompanyUsers } from './company-users.util'
+
+describe('normalizeCompanyUserRows', () => {
+  it('uses user identity and keeps membership role/status for display and actions', () => {
+    const membership = { id: 100, userId: 7, role: 'COMPANY_ADMINISTRATOR', status: 'ACTIVE', position: 'Admin', user: { id: 7, name: 'Admin ficticio', email: 'admin@example.test' } }
+    expect(normalizeCompanyUserRows([membership as any])[0]).toMatchObject({
+      id: 7, name: 'Admin ficticio', email: 'admin@example.test', role: 'COMPANY_ADMINISTRATOR', status: 'ACTIVE', position: 'Admin'
+    })
+    expect(membership.id).toBe(100)
+  })
+
+  it('preserves flat user responses', () => {
+    const user = { id: 7, name: 'Admin ficticio', email: 'admin@example.test' } as any
+    expect(normalizeCompanyUserRows([user])).toEqual([user])
+    expect(normalizeCompanyUserRows([])).toEqual([])
+  })
+})
 
 describe('normalizeCompanyUsers', () => {
   it('returns an empty array when users is undefined or null', () => {

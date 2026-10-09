@@ -5,7 +5,7 @@ import { StatusBadge } from '@/components/shared/status-badge'
 import { UserStatus } from '@/enums/user-status.enum'
 import { usePersistedColumnVisibility } from '@/hooks/use-persisted-column-visibility'
 import { useUrlSorting } from '@/hooks/use-url-sorting'
-import { User } from '@/interfaces/user.interface'
+import type { CompanyUserRow } from '@/utils/company-users.util'
 import { howTimeAgo } from '@/utils/how-time-ago.util'
 import { getUserRoleText } from '@/utils/users/get-user-role-text.util'
 import { getUserStatusText } from '@/utils/users/get-user-status-text.util'
@@ -17,7 +17,7 @@ import { UserCompanyRowOptions } from './user-company-row-options'
 
 interface UsersTableProps {
   companyId: number
-  users: User[]
+  users: CompanyUserRow[]
 }
 
 const VISIBILITY_STORAGE_KEY = 'company-users-table-columns'
@@ -49,7 +49,7 @@ export function UsersCompanyTable({ users, companyId }: UsersTableProps) {
   )
   const { sorting, handleSortingChange } = useUrlSorting()
 
-  const columns: ColumnDef<User>[] = [
+  const columns: ColumnDef<CompanyUserRow>[] = [
     {
       accessorKey: 'id',
       header: ({ column }) => <SortableColumnHeader column={column} label='ID' />,

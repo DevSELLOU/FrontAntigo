@@ -2,7 +2,7 @@ import { removeUserCompanyAction } from '@/actions/user-company/remove-user-comp
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { CustomError } from '@/errors/custom-error.error'
 import { useToast } from '@/hooks/use-toast'
-import { User } from '@/interfaces/user.interface'
+import type { CompanyUserRow } from '@/utils/company-users.util'
 import { isApiErrorResponse } from '@/utils/is-api-error-response.util'
 import { useState } from 'react'
 import { Loading } from '../loading'
@@ -12,7 +12,7 @@ interface ModalProps {
   open: boolean
   onClose: () => void
   companyId: number
-  user: User
+  user: CompanyUserRow
 }
 
 export function RemoveUserCompanyModal({ open, onClose, companyId, user }: ModalProps) {

@@ -23,7 +23,7 @@ export async function serverFetch<T>(url: string, options: RequestInit = {}, sho
   let response: Response
 
   try {
-    response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+    response = await fetch(`${process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL}${url}`, {
       ...options,
       headers
     })
