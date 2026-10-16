@@ -5,6 +5,13 @@ import type { CommonResponse } from '@/interfaces/common-response.interface'
 import type { ScheduledVisit } from '@/interfaces/scheduled-visit.interface'
 import { handleServerAction } from '@/utils/server-action.util'
 
+export async function fetchMyDayVisitsAction(companyId: number, date: string) {
+  return handleServerAction<ScheduledVisit[]>({
+    url: `/company/${companyId}/routes-visits/scheduled-visits/my/day?date=${encodeURIComponent(date)}`,
+    method: 'GET'
+  })
+}
+
 export async function fetchScheduledVisitsAction(
   companyId: number
 ): Promise<CommonResponse<ScheduledVisit[]> | ApiErrorResponse> {

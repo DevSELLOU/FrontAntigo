@@ -1,6 +1,8 @@
 export interface HistoryEntry {
   id: number
-  type: 'visit' | 'skip'
+  type: 'visit' | 'skip' | 'scheduled'
+  scheduledStatus?: string
+  scheduledTime?: string | null
   customerId: number
   customer?: {
     id: number
