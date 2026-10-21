@@ -46,7 +46,7 @@ export function ScheduledVisitsTable({ visits, loading, onCancel }: ScheduledVis
         return (
           <div
             key={visit.id}
-            className='flex items-center justify-between p-3 border rounded-lg bg-white'
+            className='flex items-center justify-between p-3 border border-border rounded-lg bg-surface'
           >
             <div className='flex-1 min-w-0'>
               <div className='flex items-center gap-2'>
@@ -55,8 +55,10 @@ export function ScheduledVisitsTable({ visits, loading, onCancel }: ScheduledVis
                 </p>
                 <Badge variant={config.variant}>{config.label}</Badge>
               </div>
-              <div className='flex items-center gap-4 text-sm text-muted-foreground mt-1'>
+              <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-1'>
                 <span>Data: {formatDateOnly(visit.scheduledDate)}</span>
+                <span>Horário: {visit.scheduledTime?.slice(0, 5) || 'Sem horário'}</span>
+                <span>Visita #{visit.id}{!visit.sourceTripId && !visit.sourceVisitRecordId ? ' · Avulsa' : ''}</span>
                 {visit.user && <span>Vendedor: {visit.user.name}</span>}
               </div>
               {visit.notes && (

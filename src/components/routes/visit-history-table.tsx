@@ -25,6 +25,8 @@ function HistoryCard({ record }: { record: HistoryEntry }) {
       <div className='shrink-0 mt-0.5'>
         {record.type === 'visit' ? (
           <CheckCircle2 className='h-5 w-5 text-success-foreground' />
+        ) : record.type === 'scheduled' ? (
+          <CalendarDays className='h-5 w-5 text-text-muted' />
         ) : (
           <XCircle className='h-5 w-5 text-text-muted' />
         )}
@@ -38,6 +40,8 @@ function HistoryCard({ record }: { record: HistoryEntry }) {
           )}
           {record.type === 'visit' ? (
             <StatusBadge variant='success'>Visitado</StatusBadge>
+          ) : record.type === 'scheduled' ? (
+            <StatusBadge variant='neutral'>{record.scheduledStatus === 'CANCELLED' ? 'Cancelada' : record.scheduledStatus === 'COMPLETED' ? 'Concluída' : 'Agendada'} · Avulsa</StatusBadge>
           ) : (
             <StatusBadge variant='neutral'>Não visitado</StatusBadge>
           )}
@@ -62,7 +66,7 @@ function HistoryCard({ record }: { record: HistoryEntry }) {
 
         {record.scheduledNextVisit && (
           <p className='text-caption text-[#008440]'>
-            Próxima visita: {formatDateOnly(record.scheduledNextVisit)}
+            {record.type === 'scheduled' ? 'Visita agendada' : 'Próxima visita'}: {formatDateOnly(record.scheduledNextVisit)} {record.scheduledTime?.slice(0, 5)}
           </p>
         )}
       </div>
@@ -121,6 +125,7 @@ function RouteGroup({ routeName, entries }: { routeName: string; entries: Histor
   const first = entries[0]
   const visitedCount = entries.filter((e) => e.type === 'visit').length
   const skippedCount = entries.filter((e) => e.type === 'skip').length
+  const scheduledCount = entries.filter((e) => e.type === 'scheduled').length
 
   return (
     <div className='overflow-hidden rounded-2xl border border-border shadow-sm'>
@@ -147,6 +152,7 @@ function RouteGroup({ routeName, entries }: { routeName: string; entries: Histor
             <span className='font-semibold text-success-foreground'>{visitedCount} visitado(s)</span>
             <span className='text-text-muted'>|</span>
             <span className='font-semibold text-text-muted'>{skippedCount} não visitado(s)</span>
+            {scheduledCount > 0 && <span className='font-semibold text-text-muted'>· {scheduledCount} agendamento(s)</span>}
           </div>
         </div>
 

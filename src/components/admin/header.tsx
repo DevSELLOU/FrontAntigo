@@ -1,6 +1,7 @@
 import { Company } from '@/interfaces/company.interface'
 import { Dispatch, SetStateAction } from 'react'
 import SideBar from './side-bar'
+import { DailyAgendaBell } from './daily-agenda-bell'
 
 interface HeaderProps {
   company?: Company
@@ -13,6 +14,7 @@ export function Header({ company, isSidebarOpen, setIsSidebarOpen }: HeaderProps
     <div className='xl:hidden fixed top-0 left-0 w-full h-16 bg-white border-b border-gray-200 flex items-center px-4 z-50'>
       <SideBar.Toggle isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
       <h1 className='text-lg font-bold text-green-950 ml-4 truncate'>{company?.fantasyName || 'Sellou'}</h1>
+      <div className='ml-auto'><DailyAgendaBell /></div>
     </div>
   )
 }

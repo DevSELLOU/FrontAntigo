@@ -15,6 +15,7 @@ export interface ScheduledVisit {
   }
   companyId: number
   scheduledDate: string
+  scheduledTime?: string | null
   status: ScheduledVisitStatus
   sourceTripId?: number
   sourceVisitRecordId?: number

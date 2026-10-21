@@ -1,6 +1,7 @@
 'use client'
 
-import { Bell, ChevronDown, LogOut, Moon, Sun, User } from 'lucide-react'
+import { ChevronDown, LogOut, Moon, Sun, User } from 'lucide-react'
+import { DailyAgendaBell } from './daily-agenda-bell'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -56,10 +57,7 @@ export function Topbar({ company, page }: TopbarProps) {
       {/* Right section: Notifications + Profile */}
       <div className='flex items-center gap-4'>
         {/* Notifications */}
-        <button className='relative flex h-9 w-9 items-center justify-center rounded-md text-text-body hover:bg-surface-muted transition-colors'>
-          <Bell size={20} />
-          <span className='absolute top-1 right-1 h-2 w-2 bg-brand-500 rounded-full' />
-        </button>
+        <DailyAgendaBell />
 
         {/* Profile Menu */}
         <div className='relative' ref={profileRef}>

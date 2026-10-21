@@ -15,6 +15,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { RouteFormSheet } from './route-form-sheet'
 import { RouteTable } from './route-table'
 import { VisitHistoryTable } from './visit-history-table'
+import { CreateVisitDialog } from './create-visit-dialog'
+import { ScheduledVisitsTable } from './scheduled-visits-table'
+import { Button } from '@/components/ui/button'
 
 interface CompanyRoutesProps {
   companyId: number
@@ -28,6 +31,8 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [isVisitOpen, setIsVisitOpen] = useState(false)
+  const [scheduledVisits, setScheduledVisits] = useState<ScheduledVisit[]>([])
 
   useEffect(() => {
     if (user) {
@@ -55,6 +60,7 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
 
     const visitRecords: VisitRecord[] = 'data' in historyResult ? historyResult.data || [] : []
     const scheduledVisits: ScheduledVisit[] = 'data' in scheduledResult ? scheduledResult.data || [] : []
+    setScheduledVisits(scheduledVisits)
 
     const merged: HistoryEntry[] = [
       ...visitRecords.map(vr => ({
@@ -81,7 +87,9 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
       })),
       ...scheduledVisits.map(sv => ({
         id: sv.id,
-        type: 'skip' as const,
+        type: (!sv.sourceTripId && !sv.sourceVisitRecordId ? 'scheduled' : 'skip') as HistoryEntry['type'],
+        scheduledStatus: sv.status,
+        scheduledTime: sv.scheduledTime,
         customerId: sv.customerId,
         customer: sv.customer,
         userId: sv.userId,
@@ -150,13 +158,15 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
         onSearch={setQuery}
         showViewSelector={false}
         primaryAction={{ label: 'Nova rota', onClick: () => setIsCreateOpen(true) }}
+        secondaryActions={user.role !== 'CUSTOMER_CLIENT' && <Button variant='outline' onClick={() => setIsVisitOpen(true)}>+ Nova visita</Button>}
       />
 
       {/* Same capsule as `shared/segmented-tab-nav.tsx`, but driven by Radix state instead of an
           `<a href>`: this screen loads its data on the client, and a link would hard-navigate and
           refetch all three endpoints on every tab switch. */}
       <Tabs defaultValue='routes' className='w-full'>
-        <TabsList className='flex h-auto min-h-[52px] w-full justify-start gap-1 rounded-2xl border border-border bg-surface p-1'>
+        <TabsList className='flex flex-wrap h-auto min-h-[52px] w-full justify-start gap-1 rounded-2xl border border-border bg-surface p-1'>
+          <TabsTrigger value='agenda' className='min-h-[44px] rounded-xl px-4 py-2.5 text-label text-text-muted data-[state=active]:bg-[var(--glass-icon-bg)] data-[state=active]:font-semibold data-[state=active]:text-[#008440]'>Visitas agendadas</TabsTrigger>
           <TabsTrigger
             value='routes'
             className='min-h-[44px] rounded-xl px-4 py-2.5 text-label text-text-muted data-[state=active]:bg-[var(--glass-icon-bg)] data-[state=active]:font-semibold data-[state=active]:text-[#008440]'
@@ -174,6 +184,9 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
         <TabsContent value='routes' className='mt-4'>
           <RouteTable routes={filteredRoutes} companyId={companyId} onRefresh={loadData} />
         </TabsContent>
+        <TabsContent value='agenda' className='mt-4'>
+          <ScheduledVisitsTable visits={scheduledVisits.filter(visit => !term || [visit.customer?.fantasyName, visit.customer?.corporateName, visit.user?.name].some(value => value?.toLowerCase().includes(term)))} loading={loading} />
+        </TabsContent>
 
         <TabsContent value='history' className='mt-4'>
           <VisitHistoryTable records={filteredHistory} loading={loading} />
@@ -186,6 +199,7 @@ export function CompanyRoutes({ companyId }: CompanyRoutesProps) {
         companyId={companyId}
         onRefresh={loadData}
       />
+      <CreateVisitDialog open={isVisitOpen} onClose={() => setIsVisitOpen(false)} companyId={companyId} onCreated={loadData} />
     </div>
   )
 }

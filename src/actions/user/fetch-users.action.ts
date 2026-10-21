@@ -8,6 +8,15 @@ interface User {
   id: number
   name: string
   email: string
+  role?: string
+  status?: string
+}
+
+interface CompanyUser {
+  userId: number
+  role: string
+  status: string
+  user: User
 }
 
 export async function fetchUsersAction(
@@ -15,8 +24,25 @@ export async function fetchUsersAction(
   search?: string
 ): Promise<CommonResponse<User[]> | ApiErrorResponse> {
   const queryParams = search ? `?query=${encodeURIComponent(search)}` : '?limit=50'
-  return await handleServerAction<User[]>({
+  const response = await handleServerAction<(User | CompanyUser)[]>({
     url: `/company/${companyId}/users${queryParams}`,
     method: 'GET'
   })
+
+  if (!('data' in response)) return response
+
+  return {
+    ...response,
+    data: (response.data || []).map(row => {
+      const user = 'user' in row ? row.user : row
+
+      return {
+        id: 'user' in row ? row.userId : user.id,
+        name: user.name,
+        email: user.email,
+        role: row.role,
+        status: row.status
+      }
+    })
+  }
 }
